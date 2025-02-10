@@ -26,6 +26,9 @@ importers:
       '@moonlight-mod/types':
         specifier: ^1.3.7
         version: 1.3.7
+      kitty-agent:
+        specifier: ^8.5.1
+        version: 8.5.1(@atcute/cid@2.1.0)(@atcute/client@2.0.7)(@atcute/oauth-browser-client@1.0.9)(@atproto/syntax@0.3.1)
     devDependencies:
       '@electron/asar':
         specifier: ^3.2.8
@@ -54,6 +57,9 @@ importers:
 
 packages:
 
+  '@atcute/cid@2.1.0':
+    resolution: {integrity: sha512-Twsf5OKGk6QEqU1Z74feo1eRmnznYFzdCxtCISCutedCL2I2eGzD1F7JZRA+heTp5kgV5Bwvxvjn7VkGQhq3Sg==}
+
   '@atcute/client@2.0.7':
     resolution: {integrity: sha512-bvNahrCGvhZw/EIx0HU/GOoKZEnUaAppbuZh7cu+VsOFA2tdFLnZJed9Hagh5Yz/eUX7QUh5NB4dRTRUdggSLQ==}
 
@@ -61,11 +67,20 @@ packages:
     resolution: {integrity: sha512-8mRnjjK+b6Z4wmfFRUYYPswVZhT7PYZBHLMCFNiI1AdrZqaJ1CmoiExYjkVGQkixZURRIaxr49KGBV2iSMF/pQ==}
     hasBin: true
 
+  '@atcute/multibase@1.1.2':
+    resolution: {integrity: sha512-KFX+c7a/u2jSNcRw0rLaUHG/XEKf1A1c8XF5soHnsb1JMCShihf/anfZ1kJ4no/IlIp9HEHV3PQRQO2sWL6ASQ==}
+
   '@atcute/oauth-browser-client@1.0.9':
     resolution: {integrity: sha512-7B4cBm9x/S6gtBgxPktCT6GY8GUze6XlCGUASqppU+bh6x5Z3QtfpPCg4jpd+bagzCdqpgb4VNhmCLcVqoO++g==}
 
   '@atcute/tid@1.0.2':
     resolution: {integrity: sha512-ahmjroNyeDPJhtuf3+HTJropaH04HmJ8fhntDu73Gpz/RkAF7+nkz6kcP2QTgfvMCgMPAJUdskAAP82GPDTY9w==}
+
+  '@atcute/uint8array@1.0.1':
+    resolution: {integrity: sha512-AAnlFKyfDRgb9GNZJbhQ6OuMhbmNPirQyapb8KnmcEhxQZ3+tt+4NcwqekEegY4MpNqSTYeeTdyxq0wGZv1JHg==}
+
+  '@atcute/varint@1.0.2':
+    resolution: {integrity: sha512-0O31hePzzr4O3NGWHUKKOyta6CGSL+AtN8iir8grGxu9jXyI7DBARlw6PbgKA6uTAvsXdpmRmF8MX+p0TsLnNg==}
 
   '@atproto/common-web@0.3.2':
     resolution: {integrity: sha512-Vx0JtL1/CssJbFAb0UOdvTrkbUautsDfHNOXNTcX2vyPIxH9xOameSqLLunM1hZnOQbJwyjmQCt6TV+bhnanDg==}
@@ -962,6 +977,14 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
+  kitty-agent@8.5.1:
+    resolution: {integrity: sha512-BK5ulBwCTyyhvEsLT4TlEGT0nNOcUBiaUh6HKWG7ZyuXEOXtdwYA8zyQFDg08z6la8bVPWPr7/33HzzRPthAmw==}
+    peerDependencies:
+      '@atcute/cid': ^2.1.0
+      '@atcute/client': ^2.0.6
+      '@atcute/oauth-browser-client': ^1.0.9
+      '@atproto/syntax': ^0.3.1
+
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -1343,6 +1366,12 @@ packages:
 
 snapshots:
 
+  '@atcute/cid@2.1.0':
+    dependencies:
+      '@atcute/multibase': 1.1.2
+      '@atcute/uint8array': 1.0.1
+      '@atcute/varint': 1.0.2
+
   '@atcute/client@2.0.7': {}
 
   '@atcute/lex-cli@1.0.4':
@@ -1352,11 +1381,19 @@ snapshots:
       picocolors: 1.1.1
       prettier: 3.4.2
 
+  '@atcute/multibase@1.1.2':
+    dependencies:
+      '@atcute/uint8array': 1.0.1
+
   '@atcute/oauth-browser-client@1.0.9':
     dependencies:
       '@atcute/client': 2.0.7
 
   '@atcute/tid@1.0.2': {}
+
+  '@atcute/uint8array@1.0.1': {}
+
+  '@atcute/varint@1.0.2': {}
 
   '@atproto/common-web@0.3.2':
     dependencies:
@@ -2418,6 +2455,13 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  kitty-agent@8.5.1(@atcute/cid@2.1.0)(@atcute/client@2.0.7)(@atcute/oauth-browser-client@1.0.9)(@atproto/syntax@0.3.1):
+    dependencies:
+      '@atcute/cid': 2.1.0
+      '@atcute/client': 2.0.7
+      '@atcute/oauth-browser-client': 1.0.9
+      '@atproto/syntax': 0.3.1
 
   levn@0.4.1:
     dependencies:

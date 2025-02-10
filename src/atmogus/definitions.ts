@@ -4,63 +4,92 @@
 import "@atcute/client/lexicons";
 
 declare module "@atcute/client/lexicons" {
-  namespace LolAtmogusActivityHistory {
-    /** A record representing an application's presence data */
+  namespace LolAtmogusActivityPresences {
+    /** A record representing one or more application presence data. */
     interface Record {
-      $type: "lol.atmogus.activity.history";
-      activity: LolAtmogusDefs.ActivityPresence;
+      $type: "lol.atmogus.activity.presences";
       createdAt: string;
+      presences: LolAtmogusDefsActivity.Presence[];
     }
   }
 
-  namespace LolAtmogusDefs {
+  namespace LolAtmogusDefsActivity {
     /** Images for the presence and their hover texts */
-    interface ActivityAssets {
-      [Brand.Type]?: "lol.atmogus.defs#activityAssets";
-      largeImage?: string | null;
-      largeText?: string | null;
-      smallImage?: string | null;
-      smallText?: string | null;
+    interface Assets {
+      [Brand.Type]?: "lol.atmogus.defs.activity#assets";
+      largeImage?: string;
+      largeText?: string;
+      smallImage?: string;
+      smallText?: string;
+    }
+    /** An activity sourced from a user's Discord Activity. */
+    interface DiscordActivitySource {
+      [Brand.Type]?: "lol.atmogus.defs.activity#discordActivitySource";
+      applicationId?: string;
     }
     /** Represents an emoji used for a custom status */
-    interface ActivityEmoji {
-      [Brand.Type]?: "lol.atmogus.defs#activityEmoji";
+    interface Emoji {
+      [Brand.Type]?: "lol.atmogus.defs.activity#emoji";
       name: string;
-      animated?: boolean | null;
-      id?: number | null;
+      animated?: boolean;
+      id?: string;
     }
     /** Information for the current party of the player */
-    interface ActivityParty {
-      [Brand.Type]?: "lol.atmogus.defs#activityParty";
-      id?: string | null;
-      size?: ActivityPartySize | null;
+    interface Party {
+      [Brand.Type]?: "lol.atmogus.defs.activity#party";
+      size?: PartySize;
     }
     /** Represents the activity party's current and maximum size */
-    interface ActivityPartySize {
-      [Brand.Type]?: "lol.atmogus.defs#activityPartySize";
+    interface PartySize {
+      [Brand.Type]?: "lol.atmogus.defs.activity#partySize";
       currentSize: number;
       maxSize: number;
     }
     /** An application's presence data */
-    interface ActivityPresence {
-      [Brand.Type]?: "lol.atmogus.defs#activityPresence";
+    interface Presence {
+      [Brand.Type]?: "lol.atmogus.defs.activity#presence";
+      /** Activity app name */
       name: string;
-      /** Minimum: 0 */
+      /**
+       * Activity type, which determines the header text for the Rich Presence data \
+       * Minimum: 0
+       */
       type: number;
-      applicationId?: number | null;
-      assets?: ActivityAssets | null;
-      details?: string | null;
-      emoji?: ActivityEmoji | null;
-      party?: ActivityParty | null;
-      state?: string | null;
-      timestamps?: ActivityTimestamps | null;
-      url?: string | null;
+      /** Images used for the Rich Presence data (and their hover texts) */
+      assets?: Assets;
+      /** What the player is currently doing in your Activity */
+      details?: string;
+      emoji?: Emoji;
+      /** Information for the current party of the player */
+      party?: Party;
+      source?: Brand.Union<DiscordActivitySource | SteamActivitySource>;
+      /** User's current party status */
+      state?: string;
+      /** Unix timestamps to display start and/or end times */
+      timestamps?: Timestamps;
+      url?: string;
     }
-    /** Timestamps for the start and/or end of the activity */
-    interface ActivityTimestamps {
-      [Brand.Type]?: "lol.atmogus.defs#activityTimestamps";
-      end?: string | null;
-      start?: string | null;
+    /** An activity sourced from a user's Steam 'now playing'. */
+    interface SteamActivitySource {
+      [Brand.Type]?: "lol.atmogus.defs.activity#steamActivitySource";
+      gameName: string;
+      appId?: number;
+    }
+    /** Timestamps for the start and/or end of the match */
+    interface Timestamps {
+      [Brand.Type]?: "lol.atmogus.defs.activity#timestamps";
+      /** Time of when the activity ends */
+      end?: string;
+      /** Time of when the activity started */
+      start?: string;
+    }
+  }
+
+  namespace LolAtmogusActivityCurrent {
+    /** A record representing a user's current game activity */
+    interface Record {
+      $type: "lol.atmogus.activity.current";
+      activity?: LolAtmogusDefsActivity.Presence;
     }
   }
 
@@ -71,20 +100,12 @@ declare module "@atcute/client/lexicons" {
     }
     type Input = undefined;
     interface Output {
-      activity: LolAtmogusDefs.ActivityPresence;
-    }
-  }
-
-  namespace LolAtmogusActivityCurrent {
-    /** A record representing a user's current game activity */
-    interface Record {
-      $type: "lol.atmogus.activity.current";
-      activity: LolAtmogusDefs.ActivityPresence | null;
+      activity: LolAtmogusDefsActivity.Presence;
     }
   }
 
   interface Records {
-    "lol.atmogus.activity.history": LolAtmogusActivityHistory.Record;
+    "lol.atmogus.activity.presences": LolAtmogusActivityPresences.Record;
     "lol.atmogus.activity.current": LolAtmogusActivityCurrent.Record;
   }
 

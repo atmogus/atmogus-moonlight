@@ -11,11 +11,6 @@
     "source": "https://example.com/"
   },
   "settings": {
-    "pdsUrl": {
-      "displayName": "PDS URL",
-      "type": "string",
-      "default": "https://bsky.social/"
-    },
     "handleDid": {
       "displayName": "Handle/DID",
       "type": "string",
