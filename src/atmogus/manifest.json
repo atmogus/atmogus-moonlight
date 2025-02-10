@@ -1,0 +1,30 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "atmogus",
+  "version": "1.0.0",
+  "apiLevel": 2,
+  "meta": {
+    "name": "atmogus",
+    "tagline": "A plugin to send Discord RPC data over AT Proto",
+    "description": "A longer description that can **use Markdown**",
+    "authors": [ "evvv" ],
+    "source": "https://example.com/"
+  },
+  "settings": {
+    "pdsUrl": {
+      "displayName": "PDS URL",
+      "type": "string",
+      "default": "https://bsky.social/"
+    },
+    "handleDid": {
+      "displayName": "Handle/DID",
+      "type": "string",
+      "default": ""
+    },
+    "appPassword": {
+      "displayName": "App Password",
+      "type": "string",
+      "default": ""
+    }
+  }
+}

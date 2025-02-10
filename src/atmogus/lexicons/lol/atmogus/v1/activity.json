@@ -1,0 +1,19 @@
+{
+    "lexicon": 1,
+    "id": "lol.atmogus.activity.history",
+    "defs": {
+        "main": {
+            "type": "record",
+            "description": "A record representing an application's presence data",
+            "key": "tid",
+            "record": {
+                "type": "object",
+                "required": [ "activity", "createdAt" ],
+                "properties": {
+                    "activity": { "type": "ref", "ref": "lol.atmogus.defs#activityPresence" },
+                    "createdAt": { "type": "string", "format": "datetime" }
+                }
+            }
+        }
+    }
+}
