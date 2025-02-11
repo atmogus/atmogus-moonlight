@@ -59,8 +59,8 @@ export interface Activity {
   };
 
   timestamps?: {
-    start?: number;
-    end?: number;
+    start?: number | string;
+    end?: number | string;
   };
 
   assets?: {

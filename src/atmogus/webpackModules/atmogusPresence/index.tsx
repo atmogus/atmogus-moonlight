@@ -20,8 +20,8 @@ function createPresenceObject(activity: Activity) {
     url: activity.url ?? undefined,
     timestamps: activity.timestamps
       ? {
-          start: activity.timestamps?.start ? new Date(activity.timestamps.start).toISOString() : undefined,
-          end: activity.timestamps?.end ? new Date(activity.timestamps.end).toISOString() : undefined
+          start: activity.timestamps?.start ? new Date(+activity.timestamps.start).toISOString() : undefined,
+          end: activity.timestamps?.end ? new Date(+activity.timestamps.end).toISOString() : undefined
         }
       : undefined,
     source: {
