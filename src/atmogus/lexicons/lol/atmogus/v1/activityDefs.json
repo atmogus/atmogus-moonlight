@@ -17,8 +17,8 @@
                 },
                 "type": {
                     "description": "Activity type, which determines the header text for the Rich Presence data",
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "string",
+                    "enum": [ "playing", "streaming", "listening", "watching", "competing" ]
                 },
                 "url": {
                     "type": "string"
@@ -35,10 +35,6 @@
                 "state": {
                     "description": "User's current party status",
                     "type": "string"
-                },
-                "emoji": {
-                    "type": "ref",
-                    "ref": "#emoji"
                 },
                 "party": {
                     "description": "Information for the current party of the player",
@@ -82,16 +78,6 @@
                     "type": "string",
                     "format": "datetime"
                 }
-            }
-        },
-        "emoji": {
-            "type": "object",
-            "description": "Represents an emoji used for a custom status",
-            "required": [ "name" ],
-            "properties": {
-                "name": { "type": "string" },
-                "id": { "type": "string" },
-                "animated": { "type": "boolean" }
             }
         },
         "party": {

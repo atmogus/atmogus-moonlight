@@ -9,17 +9,5 @@
     "description": "A longer description that can **use Markdown**",
     "authors": [ "evvv" ],
     "source": "https://example.com/"
-  },
-  "settings": {
-    "handleDid": {
-      "displayName": "Handle/DID",
-      "type": "string",
-      "default": ""
-    },
-    "appPassword": {
-      "displayName": "App Password",
-      "type": "string",
-      "default": ""
-    }
   }
 }

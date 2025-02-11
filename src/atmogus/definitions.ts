@@ -27,13 +27,6 @@ declare module "@atcute/client/lexicons" {
       [Brand.Type]?: "lol.atmogus.defs.activity#discordActivitySource";
       applicationId?: string;
     }
-    /** Represents an emoji used for a custom status */
-    interface Emoji {
-      [Brand.Type]?: "lol.atmogus.defs.activity#emoji";
-      name: string;
-      animated?: boolean;
-      id?: string;
-    }
     /** Information for the current party of the player */
     interface Party {
       [Brand.Type]?: "lol.atmogus.defs.activity#party";
@@ -50,16 +43,12 @@ declare module "@atcute/client/lexicons" {
       [Brand.Type]?: "lol.atmogus.defs.activity#presence";
       /** Activity app name */
       name: string;
-      /**
-       * Activity type, which determines the header text for the Rich Presence data \
-       * Minimum: 0
-       */
-      type: number;
+      /** Activity type, which determines the header text for the Rich Presence data */
+      type: "playing" | "streaming" | "listening" | "watching" | "competing";
       /** Images used for the Rich Presence data (and their hover texts) */
       assets?: Assets;
       /** What the player is currently doing in your Activity */
       details?: string;
-      emoji?: Emoji;
       /** Information for the current party of the player */
       party?: Party;
       source?: Brand.Union<DiscordActivitySource | SteamActivitySource>;
@@ -85,36 +74,11 @@ declare module "@atcute/client/lexicons" {
     }
   }
 
-  namespace LolAtmogusActivityCurrent {
-    /** A record representing a user's current game activity */
-    interface Record {
-      $type: "lol.atmogus.activity.current";
-      activity?: LolAtmogusDefsActivity.Presence;
-    }
-  }
-
-  namespace LolAtmogusGetUserActivity {
-    interface Params {
-      /** Handle or DID of account to fetch profile of */
-      actor: string;
-    }
-    type Input = undefined;
-    interface Output {
-      activity: LolAtmogusDefsActivity.Presence;
-    }
-  }
-
   interface Records {
     "lol.atmogus.activity.presences": LolAtmogusActivityPresences.Record;
-    "lol.atmogus.activity.current": LolAtmogusActivityCurrent.Record;
   }
 
-  interface Queries {
-    "lol.atmogus.getUserActivity": {
-      params: LolAtmogusGetUserActivity.Params;
-      output: LolAtmogusGetUserActivity.Output;
-    };
-  }
+  interface Queries {}
 
   interface Procedures {}
 }

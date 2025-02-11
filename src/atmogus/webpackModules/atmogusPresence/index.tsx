@@ -1,16 +1,14 @@
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 
-import type { At, Brand, LolAtmogusActivityPresences, LolAtmogusDefsActivity } from "@atcute/client/lexicons";
-import * as TID from "@atcute/tid";
+import type { Brand, LolAtmogusDefsActivity } from "@atcute/client/lexicons";
 import { ActivityType, type Activity, type SelfPresenceStoreUpdateEvent } from "./types";
-import { getLoggedInAgent } from "./atproto";
 
 const logger = moonlight.getLogger("atmogus/atmogusPresence");
 logger.info("Hello from atmogus!");
 
 function createPresenceObject(activity: Activity) {
   if (activity == null) {
-    logger.info("ACTIVITY IS NULL; EXITING FUNC");
+    logger.debug("ACTIVITY IS NULL; EXITING FUNC");
     return activity;
   }
 
@@ -18,7 +16,7 @@ function createPresenceObject(activity: Activity) {
   const activityObject: Brand.Union<LolAtmogusDefsActivity.Presence> = {
     $type: "lol.atmogus.defs.activity#presence",
     name: activity.name,
-    type: activity.type,
+    type: convertActivityTypeToString(activity.type),
     url: activity.url ?? undefined,
     timestamps: activity.timestamps
       ? {
@@ -32,14 +30,6 @@ function createPresenceObject(activity: Activity) {
     },
     details: activity.details ?? undefined,
     state: activity.state ?? undefined,
-    emoji:
-      activity.emoji !== undefined
-        ? {
-            name: activity.emoji.name,
-            id: activity.emoji.id ?? undefined,
-            animated: activity.emoji.animated ?? undefined
-          }
-        : undefined,
     party:
       activity.party !== undefined
         ? {
@@ -65,19 +55,6 @@ function createPresenceObject(activity: Activity) {
   return activityObject;
 }
 
-function createRecordFromPresences(activityObjects: Brand.Union<LolAtmogusDefsActivity.Presence>[], createdAt: Date) {
-  // create activity record
-  const record: LolAtmogusActivityPresences.Record = {
-    $type: "lol.atmogus.activity.presences",
-    presences: activityObjects,
-    createdAt: createdAt.toISOString()
-  };
-
-  logger.info("Created activity record", record);
-
-  return record;
-}
-
 /*import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 spacepack.require("discord/Dispatcher").default.addInterceptor((e) => { 
@@ -100,22 +77,35 @@ Dispatcher.subscribe("SELF_PRESENCE_STORE_UPDATE", (event: SelfPresenceStoreUpda
   }
 
   const activityObjects = event.activities.filter((e) => e.type !== ActivityType.Custom).map(createPresenceObject);
-  const presencesRecord = createRecordFromPresences(activityObjects, new Date());
 
-  (async () => {
-    const agent = await getLoggedInAgent();
-
-    const identifier = moonlight.getConfigOption<string>("atmogus", "handleDid") ?? "undefined?";
-
-    agent.create({
-      collection: "lol.atmogus.activity.presences",
-      rkey: TID.now(),
-      repo: identifier,
-      record: presencesRecord
-    });
-  })();
+  fetch("http://localhost:18420/api/discord/activity", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(activityObjects satisfies Brand.Union<LolAtmogusDefsActivity.Presence>[])
+  });
 
   logger.info("event triggered", event);
 
   lastPresenceEvent = event;
 });
+
+function convertActivityTypeToString(
+  type: ActivityType
+): "playing" | "streaming" | "listening" | "watching" | "competing" {
+  switch (type) {
+    case ActivityType.Playing:
+      return "playing";
+    case ActivityType.Streaming:
+      return "streaming";
+    case ActivityType.Listening:
+      return "listening";
+    case ActivityType.Watching:
+      return "watching";
+    case ActivityType.Competing:
+      return "competing";
+    default:
+      return "playing";
+  }
+}
