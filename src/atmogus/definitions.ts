@@ -9,6 +9,7 @@ declare module "@atcute/client/lexicons" {
     interface Record {
       $type: "lol.atmogus.activity.presences";
       createdAt: string;
+      activityEndedAt?: string;
       presences: LolAtmogusDefsActivity.Presence[];
     }
   }
