@@ -378,28 +378,30 @@ Dispatcher.subscribe("RUNNING_GAMES_CHANGE", (event: any) => {
   }
 });
 
-Dispatcher.subscribe("SPOTIFY_PLAYER_STATE", (event: SpotifyPlayerState) => {
+let prevSpotifyState : SpotifyPlayerState;
+
+Dispatcher.subscribe("SPOTIFY_PLAYER_STATE", (spotifyPlayerState: SpotifyPlayerState) => {
   //logger.info("SPOTIFY PLAYER STATE", event);
 
   let spotifyId = "spotify:1";
 
-  if (event.track != null) {
-    let start = new Date().getUTCMilliseconds();
-    let urlSplit = event.track.album.image.url.split('/');
+  if (spotifyPlayerState.track != null) {
+    let start = new Date().getTime();
+    let urlSplit = spotifyPlayerState.track.album.image.url.split('/');
     
     let activity : Activity = {
       name: "Spotify",
       type: ActivityType.Listening,
-      state: event.track.artists.map(artist => artist.name).join(', '), // TODO: make artists clickable,
-      details: event.track.name, // TODO: make track clickable
+      state: spotifyPlayerState.track.artists.map(artist => artist.name).join(', '), // TODO: make artists clickable,
+      details: spotifyPlayerState.track.name, // TODO: make track clickable
       application_id: spotifyId,
       timestamps: {
         start,
-        end: start + event.track.duration
+        end: start + spotifyPlayerState.track.duration
       },
       assets: {
         large_image: `spotify:${urlSplit[urlSplit.length - 1]}`,
-        large_text: event.track.album.name
+        large_text: spotifyPlayerState.track.album.name
       } // TODO: sync_id?
     };
 
@@ -408,13 +410,18 @@ Dispatcher.subscribe("SPOTIFY_PLAYER_STATE", (event: SpotifyPlayerState) => {
       activity
     };
 
+    
+    let trackNotInLatest = (latestActivityEvents[spotifyId] == null || latestActivityEvents[spotifyId][latestActivityEvents[spotifyId].length - 1].activity != activity);
+    let trackNotInHistory =  (activityHistory[spotifyId] == null || activityHistory[spotifyId].activity != activity);
+
+    let trackNew = isTrackNew(prevSpotifyState, spotifyPlayerState);
+
+
     // temp; see about replacing this w/live scrubber update at some point?
     // TODO: better "scrubber moved" event detection
-    if (event.isPlaying && (latestActivityEvents[spotifyId] == null || latestActivityEvents[spotifyId][latestActivityEvents[spotifyId].length - 1].activity != activity) &&
-        (activityHistory[spotifyId] == null || activityHistory[spotifyId].activity != activity)
-    ) {
+    if (spotifyPlayerState.isPlaying && trackNew && (trackNotInLatest && trackNotInHistory)) {
       addEventToHistory(activityEvent);
-      logger.info(`New song detected: ${event.track.name} by ${event.track.artists.map(artist => artist.name).join(', ')}. Album: ${event.track.album.name}`)
+      logger.info(`New song detected: ${spotifyPlayerState.track.name} by ${spotifyPlayerState.track.artists.map(artist => artist.name).join(', ')}. Album: ${spotifyPlayerState.track.album.name}`)
     }
   } else {
     // spotify session ended !!!
@@ -433,7 +440,25 @@ Dispatcher.subscribe("SPOTIFY_PLAYER_STATE", (event: SpotifyPlayerState) => {
       logger.info(`End of spotify session detected`);
     }
   }
+
+  prevSpotifyState = spotifyPlayerState;
 });
+
+function isTrackNew(prevSpotifyState: SpotifyPlayerState, newSpotifyState: SpotifyPlayerState) {
+  if (prevSpotifyState == null) {
+    return newSpotifyState != null && newSpotifyState.track != null;
+  }
+
+  if (newSpotifyState != null) {
+    if (prevSpotifyState.track != null && newSpotifyState.track != null) {
+      return (prevSpotifyState.track.id != newSpotifyState.track.id);
+    }
+
+    return prevSpotifyState.track == null && newSpotifyState.track != null;
+  }
+
+  return false;
+}
 
 /*
 Dispatcher.subscribe("SPOTIFY_NEW_TRACK", (event: any) => {
